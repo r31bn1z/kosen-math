@@ -1,0 +1,98 @@
+:root {
+  --bg: #f7f4ef;
+  --bg-accent: #ebe4d8;
+  --ink: #1a2b33;
+  --ink-muted: #4a5c66;
+  --link: #0d5c63;
+  --link-hover: #094248;
+  --border: #d4cbbd;
+  --max-prose: 42rem;
+  --font-sans: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink);
+  background:
+    linear-gradient(165deg, #f9f6f1 0%, var(--bg) 45%, var(--bg-accent) 100%);
+  background-attachment: fixed;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+main {
+  width: min(100% - 2rem, var(--max-prose));
+  margin-inline: auto;
+  padding-block: 2.5rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.site-header {
+  width: min(100% - 2rem, 56rem);
+  margin-inline: auto;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header a {
+  font-family: var(--font-display);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.site-footer {
+  width: min(100% - 2rem, var(--max-prose));
+  margin-inline: auto;
+  padding-block: 2rem 3rem;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.prose .katex-display {
+  margin-block: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.cta-row a {
+  font-weight: 600;
+}
