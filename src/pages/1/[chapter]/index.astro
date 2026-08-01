@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { getCatalog } from '../../../lib/catalog';
+
+export async function getStaticPaths() {
+  const catalog = await getCatalog();
+  return catalog.chapters.map((chapter) => ({
+    params: { chapter: chapter.id },
+    props: { chapter, sections: catalog.sectionsByChapter[chapter.id] ?? [] },
+  }));
+}
+
+const { chapter, sections } = Astro.props;
+---
+
+<BaseLayout title={chapter.title} description={`${chapter.title}の節一覧`}>
+  <Breadcrumb
+    items={[
+      { href: '/1/', label: '1年' },
+      { label: chapter.title },
+    ]}
+  />
+  <h1>{chapter.title}</h1>
+  <ul>
+    {
+      sections.map((section) => (
+        <li>
+          <a href={`/1/${chapter.id}/${section.id}/`}>{section.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

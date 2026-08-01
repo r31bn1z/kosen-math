@@ -13,11 +13,15 @@ pnpm build
 pnpm test
 ```
 
+## コンテンツ
+
+問題解説は `content/math1/**/q*.md`（Markdown + KaTeX）。
+`draft: true` のファイルは本番ビルドから除外される。
+
 ## 方針
 
 - 解説は独自執筆。解答 PDF の文言・図は転載しない
 - PDF はリポジトリに入れない（`.gitignore` で `*.pdf`）
-- 下書きは frontmatter の `draft: true` で本番ビルドから除外
 
 ## Cloudflare Pages
 

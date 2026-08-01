@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../../components/Breadcrumb.astro';
+import { getCatalog, getSectionProblems } from '../../../../lib/catalog';
+import { problemHref } from '../../../../lib/math1';
+
+export async function getStaticPaths() {
+  const catalog = await getCatalog();
+  const paths = [];
+  for (const chapter of catalog.chapters) {
+    for (const section of catalog.sectionsByChapter[chapter.id] ?? []) {
+      paths.push({
+        params: { chapter: chapter.id, section: section.id },
+        props: {
+          chapter,
+          section,
+          problems: getSectionProblems(catalog, chapter.id, section.id),
+        },
+      });
+    }
+  }
+  return paths;
+}
+
+const { chapter, section, problems } = Astro.props;
+---
+
+<BaseLayout title={`${chapter.title} ${section.title}`} description="問題一覧">
+  <Breadcrumb
+    items={[
+      { href: '/1/', label: '1年' },
+      { href: `/1/${chapter.id}/`, label: chapter.title },
+      { label: section.title },
+    ]}
+  />
+  <h1>{chapter.title} {section.title}</h1>
+  <ul>
+    {
+      problems.map((problem) => (
+        <li>
+          <a href={problemHref(problem.chapter, problem.section, problem.problem)}>
+            {problem.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

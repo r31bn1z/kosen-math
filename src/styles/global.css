@@ -96,3 +96,14 @@ h3 {
 .cta-row a {
   font-weight: 600;
 }
+
+h1.hero {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 0.75rem;
+}
+
+.lede {
+  font-size: 1.1rem;
+  color: var(--ink-muted);
+  max-width: 36rem;
+}

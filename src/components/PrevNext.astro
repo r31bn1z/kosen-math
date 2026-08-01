@@ -1,0 +1,47 @@
+---
+interface Props {
+  prevHref?: string | null;
+  prevLabel?: string | null;
+  nextHref?: string | null;
+  nextLabel?: string | null;
+}
+
+const { prevHref, prevLabel, nextHref, nextLabel } = Astro.props;
+---
+
+<nav class="prev-next" aria-label="前後の問題">
+  <div>
+    {
+      prevHref && prevLabel ? (
+        <a href={prevHref}>← {prevLabel}</a>
+      ) : (
+        <span />
+      )
+    }
+  </div>
+  <div class="next">
+    {
+      nextHref && nextLabel ? (
+        <a href={nextHref}>{nextLabel} →</a>
+      ) : (
+        <span />
+      )
+    }
+  </div>
+</nav>
+
+<style>
+  .prev-next {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+
+  .next {
+    text-align: right;
+  }
+</style>
