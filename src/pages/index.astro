@@ -1,14 +1,83 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCatalog, getChapterProblems } from '../lib/catalog';
+import { problemHref } from '../lib/math1';
+
+const catalog = await getCatalog();
 ---
 
 <BaseLayout title="高専の数学解説">
-  <h1 class="hero">高専の数学解説</h1>
-  <p class="lede">
-    『高専の数学1』の問題番号に沿って、自分の言葉で解き方をまとめたサイトです。
-  </p>
-  <div class="cta-row">
-    <a href="/1/">1年生の解説へ</a>
-    <a href="/about/">このサイトについて</a>
-  </div>
+  <p class="lede">高専の数学 問題集の解説をまとめました。</p>
+
+  <ul class="year-list">
+    <li>
+      <details class="year-panel">
+        <summary>
+          <a class="year-panel__title" href="/1/">高専の数学1</a>
+        </summary>
+        <div class="year-panel__body">
+          {
+            catalog.chapters.length === 0 ? (
+              <p class="year-panel__empty">公開中の解説はまだありません。</p>
+            ) : (
+              <ul class="toc-chapters">
+                {catalog.chapters.map((chapter) => (
+                  <li>
+                    <details>
+                      <summary>
+                        <a class="toc-chapter__title" href={`/1/${chapter.id}/`}>
+                          {chapter.title}
+                        </a>
+                      </summary>
+                      <ul class="toc-problems">
+                        {getChapterProblems(catalog, chapter.id).map((problem) => (
+                          <li>
+                            <a href={problemHref(problem.chapter, problem.problem)}>
+                              {problem.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </details>
+    </li>
+
+    <li>
+      <details class="year-panel">
+        <summary>
+          <a class="year-panel__title" href="/2/">高専の数学2</a>
+        </summary>
+        <div class="year-panel__body">
+          <p class="year-panel__empty">準備中です。</p>
+        </div>
+      </details>
+    </li>
+
+    <li>
+      <details class="year-panel">
+        <summary>
+          <a class="year-panel__title" href="/3/">高専の数学3</a>
+        </summary>
+        <div class="year-panel__body">
+          <p class="year-panel__empty">準備中です。</p>
+        </div>
+      </details>
+    </li>
+  </ul>
+
+  <script>
+    document
+      .querySelectorAll('.year-panel > summary a, .toc-chapters > li > details > summary a')
+      .forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+      });
+  </script>
 </BaseLayout>

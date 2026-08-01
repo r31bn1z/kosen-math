@@ -41,7 +41,25 @@ const { prevHref, prevLabel, nextHref, nextLabel } = Astro.props;
     font-size: 0.95rem;
   }
 
+  .prev-next a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
   .next {
     text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    .prev-next {
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: 2rem;
+    }
+
+    .next {
+      text-align: left;
+    }
   }
 </style>

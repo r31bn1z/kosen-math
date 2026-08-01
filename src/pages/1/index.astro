@@ -6,10 +6,9 @@ import { getCatalog } from '../../lib/catalog';
 const catalog = await getCatalog();
 ---
 
-<BaseLayout title="1年生" description="高専の数学1 章一覧">
-  <Breadcrumb items={[{ label: '1年' }]} />
-  <h1>1年生</h1>
-  <p>『高専の数学1』に準拠した解説です。</p>
+<BaseLayout title="高専の数学1" description="高専の数学1 章一覧">
+  <Breadcrumb items={[{ label: '高専の数学1' }]} />
+  <h1>高専の数学1</h1>
   <ul>
     {
       catalog.chapters.map((chapter) => (

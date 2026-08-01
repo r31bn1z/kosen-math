@@ -4,11 +4,9 @@ import path from 'node:path';
 import { filterPublished, sortByOrder } from './math1';
 
 export type ChapterMeta = { id: string; title: string; order: number };
-export type SectionMeta = { id: string; title: string; order: number; chapterId: string };
 export type ProblemEntry = {
   id: string;
   chapter: string;
-  section: string;
   problem: string;
   title: string;
   order: number;
@@ -18,27 +16,21 @@ export type ProblemEntry = {
 
 export type Catalog = {
   chapters: ChapterMeta[];
-  sectionsByChapter: Record<string, SectionMeta[]>;
-  problemsBySection: Record<string, ProblemEntry[]>;
+  problemsByChapter: Record<string, ProblemEntry[]>;
 };
 
 const CONTENT_ROOT = path.join(process.cwd(), 'content/math1');
 
-function sectionKey(chapter: string, section: string): string {
-  return `${chapter}/${section}`;
-}
-
-function parseProblemId(id: string): { chapter: string; section: string; problem: string } | null {
+function parseProblemId(id: string): { chapter: string; problem: string } | null {
   const parts = id.split('/');
-  if (parts.length < 3) return null;
+  if (parts.length < 2) return null;
   const chapter = parts[0]!;
-  const section = parts[1]!;
   const file = parts[parts.length - 1]!;
   const problem = file.replace(/\.mdx?$/, '');
-  if (!chapter.startsWith('ch') || !section.startsWith('s') || !problem.startsWith('q')) {
+  if (!chapter.startsWith('ch') || !problem.startsWith('q')) {
     return null;
   }
-  return { chapter, section, problem };
+  return { chapter, problem };
 }
 
 async function readMeta(filePath: string): Promise<{ title: string; order: number }> {
@@ -61,7 +53,6 @@ export async function getCatalog(): Promise<Catalog> {
       return {
         id: entry.id,
         chapter: parsed.chapter,
-        section: parsed.section,
         problem: parsed.problem,
         title: entry.data.title,
         order: entry.data.order,
@@ -71,14 +62,13 @@ export async function getCatalog(): Promise<Catalog> {
     }),
   );
 
-  const problemsBySection: Record<string, ProblemEntry[]> = {};
+  const problemsByChapter: Record<string, ProblemEntry[]> = {};
   for (const problem of published) {
-    const key = sectionKey(problem.chapter, problem.section);
-    problemsBySection[key] ??= [];
-    problemsBySection[key].push(problem);
+    problemsByChapter[problem.chapter] ??= [];
+    problemsByChapter[problem.chapter]!.push(problem);
   }
-  for (const key of Object.keys(problemsBySection)) {
-    problemsBySection[key] = sortByOrder(problemsBySection[key]!);
+  for (const key of Object.keys(problemsByChapter)) {
+    problemsByChapter[key] = sortByOrder(problemsByChapter[key]!);
   }
 
   const chapterDirs = (await readdir(CONTENT_ROOT, { withFileTypes: true }))
@@ -86,47 +76,18 @@ export async function getCatalog(): Promise<Catalog> {
     .map((d) => d.name);
 
   const chapters: ChapterMeta[] = [];
-  const sectionsByChapter: Record<string, SectionMeta[]> = {};
-
   for (const chapterId of chapterDirs) {
+    if (!problemsByChapter[chapterId]?.length) continue;
     const chapterMeta = await readMeta(path.join(CONTENT_ROOT, chapterId, 'meta.json'));
-    const sectionDirs = (
-      await readdir(path.join(CONTENT_ROOT, chapterId), { withFileTypes: true })
-    )
-      .filter((d) => d.isDirectory() && d.name.startsWith('s'))
-      .map((d) => d.name);
-
-    const sections: SectionMeta[] = [];
-    for (const sectionId of sectionDirs) {
-      const key = sectionKey(chapterId, sectionId);
-      if (!problemsBySection[key]?.length) continue;
-      const sectionMeta = await readMeta(
-        path.join(CONTENT_ROOT, chapterId, sectionId, 'meta.json'),
-      );
-      sections.push({
-        id: sectionId,
-        title: sectionMeta.title,
-        order: sectionMeta.order,
-        chapterId,
-      });
-    }
-
-    if (sections.length === 0) continue;
     chapters.push({ id: chapterId, title: chapterMeta.title, order: chapterMeta.order });
-    sectionsByChapter[chapterId] = sortByOrder(sections);
   }
 
   return {
     chapters: sortByOrder(chapters),
-    sectionsByChapter,
-    problemsBySection,
+    problemsByChapter,
   };
 }
 
-export function getSectionProblems(
-  catalog: Catalog,
-  chapter: string,
-  section: string,
-): ProblemEntry[] {
-  return catalog.problemsBySection[sectionKey(chapter, section)] ?? [];
+export function getChapterProblems(catalog: Catalog, chapter: string): ProblemEntry[] {
+  return catalog.problemsByChapter[chapter] ?? [];
 }

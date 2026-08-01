@@ -22,13 +22,66 @@ const pageTitle = title === '高専の数学解説' ? title : `${title} | 高専
   </head>
   <body>
     <header class="site-header">
-      <a href="/">高専の数学解説</a>
+      <a class="site-brand" href="/">高専の数学解説</a>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="メニューを開く"
+      >
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="サイト">
+        <a href="/about/">このサイトについて</a>
+        <a href="/developer/">開発者について</a>
+        <a href="/disclaimer/">免責事項</a>
+      </nav>
     </header>
+    <button class="nav-backdrop" type="button" aria-label="メニューを閉じる" tabindex="-1"></button>
+    <script>
+      const toggle = document.querySelector('.nav-toggle');
+      const nav = document.querySelector('#site-nav');
+      const backdrop = document.querySelector('.nav-backdrop');
+      if (
+        toggle instanceof HTMLButtonElement &&
+        nav instanceof HTMLElement &&
+        backdrop instanceof HTMLButtonElement
+      ) {
+        const setOpen = (open) => {
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
+          document.body.classList.toggle('nav-open', open);
+          backdrop.tabIndex = open ? 0 : -1;
+        };
+
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') !== 'true';
+          setOpen(open);
+        });
+
+        backdrop.addEventListener('click', () => setOpen(false));
+
+        nav.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => setOpen(false));
+        });
+
+        window.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setOpen(false);
+        });
+      }
+    </script>
     <main>
       <slot />
     </main>
     <footer class="site-footer">
-      <p>『高専の数学1』準拠の独自解説です。公式解答の転載ではありません。</p>
+      <p class="site-footer__meta">
+        <span>&copy; {new Date().getFullYear()} r31bn1z</span>
+        <span class="site-footer__sep" aria-hidden="true">·</span>
+        <span>Created with <a href="https://astro.build/" rel="noopener noreferrer">Astro</a></span>
+      </p>
     </footer>
   </body>
 </html>

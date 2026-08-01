@@ -29,6 +29,6 @@ export function neighbors<T extends { problem: string }>(
   };
 }
 
-export function problemHref(chapter: string, section: string, problem: string): string {
-  return `/1/${chapter}/${section}/${problem}/`;
+export function problemHref(chapter: string, problem: string): string {
+  return `/1/${chapter}/${problem}/`;
 }
