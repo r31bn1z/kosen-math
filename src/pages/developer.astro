@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { profilePageJsonLd } from '../lib/seo';
 ---
 
-<BaseLayout title="r31bn1z" description="高専の数学解説の開発者について">
+<BaseLayout
+  title="r31bn1z"
+  description="高専の数学解説の執筆・運営者 r31bn1z について。"
+  jsonLd={profilePageJsonLd()}
+>
   <h1>r31bn1z</h1>
   <p>
     このサイトは <strong>r31bn1z</strong> が作成・運営しています。高専の数学問題集について、自分の言葉で解説をまとめています。

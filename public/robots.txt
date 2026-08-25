@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kosen-math.r31bn1z.com/sitemap-index.xml
