@@ -59,7 +59,7 @@ export async function getCatalog(): Promise<Catalog> {
       entry,
     } satisfies ProblemEntry;
   });
-  const published = import.meta.env.DEV ? mapped : filterPublished(mapped);
+  const published = filterPublished(mapped);
 
   const problemsByChapter: Record<string, ProblemEntry[]> = {};
   for (const problem of published) {

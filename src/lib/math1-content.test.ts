@@ -49,7 +49,7 @@ describe('math1 problem files', () => {
     expect(chapters).toEqual(Object.keys(EXPECTED));
   });
 
-  it('has the expected problem files and draft frontmatter', () => {
+  it('has the expected problem files and published frontmatter', () => {
     for (const [chapter, count] of Object.entries(EXPECTED)) {
       const n = Number(chapter.slice(2));
       const files = readdirSync(path.join(ROOT, chapter))
@@ -64,7 +64,8 @@ describe('math1 problem files', () => {
         const data = parseFrontmatter(raw);
         expect(data.title).toBe(`"${n}.${order}"`);
         expect(data.order).toBe(String(order));
-        expect(data.draft).toBe('true');
+        expect(data.draft).toBeUndefined();
+        expect(raw).not.toContain('draft: true');
         expect(raw).not.toContain('</content>');
       }
     }

@@ -205,15 +205,6 @@ body.nav-open .nav-toggle__bar:nth-child(3) {
   color: inherit;
 }
 
-.draft-note {
-  margin: 0 0 1.5rem;
-  padding: 0.75rem 1rem;
-  border-left: 3px solid var(--link);
-  background: color-mix(in srgb, var(--bg-accent) 70%, white);
-  color: var(--ink-muted);
-  font-size: 0.92rem;
-}
-
 .prose {
   overflow-wrap: anywhere;
 }
