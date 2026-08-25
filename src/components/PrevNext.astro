@@ -32,19 +32,26 @@ const { prevHref, prevLabel, nextHref, nextLabel } = Astro.props;
 
 <style>
   .prev-next {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    align-items: start;
     margin-top: 2.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--border);
     font-size: 0.95rem;
   }
 
+  .prev-next > * {
+    min-width: 0;
+  }
+
   .prev-next a {
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .next {
@@ -53,13 +60,8 @@ const { prevHref, prevLabel, nextHref, nextLabel } = Astro.props;
 
   @media (max-width: 640px) {
     .prev-next {
-      flex-direction: column;
-      gap: 0.35rem;
       margin-top: 2rem;
-    }
-
-    .next {
-      text-align: left;
+      font-size: 0.9rem;
     }
   }
 </style>
