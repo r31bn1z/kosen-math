@@ -2,7 +2,6 @@
 import { render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
-import TextbookNote from '../../../components/TextbookNote.astro';
 import PrevNext from '../../../components/PrevNext.astro';
 import { getCatalog, getChapterProblems } from '../../../lib/catalog';
 import { neighbors, problemHref } from '../../../lib/math1';
@@ -46,7 +45,6 @@ const heading = `${chapter.title} ${problem.title}`;
     ]}
   />
   <h1>{heading}</h1>
-  <TextbookNote />
   <article class="prose">
     <Content />
   </article>

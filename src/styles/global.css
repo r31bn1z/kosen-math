@@ -209,6 +209,15 @@ body.nav-open .nav-toggle__bar:nth-child(3) {
   overflow-wrap: anywhere;
 }
 
+.prose h3 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.prose h3:first-child {
+  margin-top: 0;
+}
+
 .prose .katex-display {
   margin-block: 1.5rem;
   overflow-x: auto;
