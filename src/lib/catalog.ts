@@ -44,23 +44,22 @@ async function readMeta(filePath: string): Promise<{ title: string; order: numbe
 
 export async function getCatalog(): Promise<Catalog> {
   const collection = await getCollection('problems');
-  const published = filterPublished(
-    collection.map((entry) => {
-      const parsed = parseProblemId(entry.id);
-      if (!parsed) {
-        throw new Error(`Unexpected problem id: ${entry.id}`);
-      }
-      return {
-        id: entry.id,
-        chapter: parsed.chapter,
-        problem: parsed.problem,
-        title: entry.data.title,
-        order: entry.data.order,
-        draft: entry.data.draft,
-        entry,
-      } satisfies ProblemEntry;
-    }),
-  );
+  const mapped = collection.map((entry) => {
+    const parsed = parseProblemId(entry.id);
+    if (!parsed) {
+      throw new Error(`Unexpected problem id: ${entry.id}`);
+    }
+    return {
+      id: entry.id,
+      chapter: parsed.chapter,
+      problem: parsed.problem,
+      title: entry.data.title,
+      order: entry.data.order,
+      draft: entry.data.draft,
+      entry,
+    } satisfies ProblemEntry;
+  });
+  const published = import.meta.env.DEV ? mapped : filterPublished(mapped);
 
   const problemsByChapter: Record<string, ProblemEntry[]> = {};
   for (const problem of published) {

@@ -46,6 +46,11 @@ const heading = `${chapter.title} ${problem.title}`;
     ]}
   />
   <h1>{heading}</h1>
+  {
+    problem.draft && import.meta.env.DEV ? (
+      <p class="textbook-note">このページは下書きです。本番ビルドには含まれません。</p>
+    ) : null
+  }
   <TextbookNote />
   <article class="prose">
     <Content />
