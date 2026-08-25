@@ -1,14 +1,40 @@
 ---
 import '../styles/global.css';
 import 'katex/dist/katex.min.css';
+import {
+  DEFAULT_DESCRIPTION,
+  OG_IMAGE_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_PATH,
+  OG_IMAGE_WIDTH,
+  SITE_NAME,
+  assetUrl,
+  canonicalUrl,
+  pageTitle as formatTitle,
+  stringifyJsonLd,
+  type JsonLd,
+} from '../lib/seo';
 
 interface Props {
   title: string;
   description?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: JsonLd | JsonLd[];
+  noindex?: boolean;
 }
 
-const { title, description = '高専の数学1に準拠した独自解説サイト' } = Astro.props;
-const pageTitle = title === '高専の数学解説' ? title : `${title} | 高専の数学解説`;
+const {
+  title,
+  description = DEFAULT_DESCRIPTION,
+  ogType = 'website',
+  jsonLd,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = formatTitle(title);
+const canonical = canonicalUrl(Astro.url.pathname);
+const ogImage = assetUrl(OG_IMAGE_PATH);
+const jsonLdBlocks = jsonLd == null ? [] : Array.isArray(jsonLd) ? jsonLd : [jsonLd];
 ---
 
 <!doctype html>
@@ -17,8 +43,35 @@ const pageTitle = title === '高専の数学解説' ? title : `${title} | 高専
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#f7f4ef" />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{pageTitle}</title>
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
+    <meta property="og:image:alt" content={OG_IMAGE_ALT} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
+
+    {
+      jsonLdBlocks.map((block) => (
+        <script is:inline type="application/ld+json" set:html={stringifyJsonLd(block)} />
+      ))
+    }
   </head>
   <body>
     <header class="site-header">

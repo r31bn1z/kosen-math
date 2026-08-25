@@ -2,11 +2,23 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { getCatalog } from '../../lib/catalog';
+import { breadcrumbJsonLd, collectionPageJsonLd } from '../../lib/seo';
 
 const catalog = await getCatalog();
+const description = '『高専の数学1』の章別解説一覧。各問は独自の解説です。';
 ---
 
-<BaseLayout title="高専の数学1" description="高専の数学1 章一覧">
+<BaseLayout
+  title="高専の数学1"
+  description={description}
+  jsonLd={[
+    collectionPageJsonLd('高専の数学1', '/1/', description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学1' },
+    ]),
+  ]}
+>
   <Breadcrumb items={[{ label: '高専の数学1' }]} />
   <h1>高専の数学1</h1>
   <ul>

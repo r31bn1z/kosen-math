@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getCatalog, getChapterProblems } from '../../../lib/catalog';
 import { problemHref } from '../../../lib/math1';
+import { breadcrumbJsonLd, chapterDescription, collectionPageJsonLd } from '../../../lib/seo';
 
 export async function getStaticPaths() {
   const catalog = await getCatalog();
@@ -16,9 +17,22 @@ export async function getStaticPaths() {
 }
 
 const { chapter, problems } = Astro.props;
+const description = chapterDescription(chapter.title);
+const chapterPath = `/1/${chapter.id}/`;
 ---
 
-<BaseLayout title={chapter.title} description={`${chapter.title}の問題一覧`}>
+<BaseLayout
+  title={chapter.title}
+  description={description}
+  jsonLd={[
+    collectionPageJsonLd(chapter.title, chapterPath, description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学1', path: '/1/' },
+      { name: chapter.title },
+    ]),
+  ]}
+>
   <Breadcrumb
     items={[
       { href: '/1/', label: '高専の数学1' },

@@ -5,6 +5,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import PrevNext from '../../../components/PrevNext.astro';
 import { getCatalog, getChapterProblems } from '../../../lib/catalog';
 import { neighbors, problemHref } from '../../../lib/math1';
+import { articleJsonLd, breadcrumbJsonLd, problemDescription } from '../../../lib/seo';
 
 export async function getStaticPaths() {
   const catalog = await getCatalog();
@@ -28,9 +29,24 @@ const { chapter, problem, problems } = Astro.props;
 const { Content } = await render(problem.entry);
 const { prev, next } = neighbors(problems, problem.problem);
 const heading = `${chapter.title} ${problem.title}`;
+const description = problemDescription(chapter.title, problem.title);
+const problemPath = problemHref(chapter.id, problem.problem);
 ---
 
-<BaseLayout title={heading} description={`${heading}の解説`}>
+<BaseLayout
+  title={heading}
+  description={description}
+  ogType="article"
+  jsonLd={[
+    articleJsonLd(heading, problemPath, description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学1', path: '/1/' },
+      { name: chapter.title, path: `/1/${chapter.id}/` },
+      { name: problem.title },
+    ]),
+  ]}
+>
   <Breadcrumb
     items={[
       { href: '/1/', label: '高専の数学1' },
@@ -48,6 +64,7 @@ const heading = `${chapter.title} ${problem.title}`;
   <article class="prose">
     <Content />
   </article>
+  <p class="byline">解説: <a href="/developer/">r31bn1z</a></p>
   <PrevNext
     prevHref={prev ? problemHref(prev.chapter, prev.problem) : null}
     prevLabel={prev?.title ?? null}
