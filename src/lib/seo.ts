@@ -1,7 +1,9 @@
+import type { Year } from './math1';
+
 export const SITE_NAME = '高専の数学解説';
 export const SITE_ORIGIN = 'https://kosen-math.r31bn1z.com';
 export const DEFAULT_DESCRIPTION =
-  '『高専の数学1』に準拠した独自解説サイト。問題文は掲載せず、章・問番号で指します。';
+  '『高専の数学1』『高専の数学2』に準拠した独自解説サイト。問題文は掲載せず、章・問番号で指します。';
 export const OG_IMAGE_PATH = '/og.png';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
@@ -137,12 +139,16 @@ export function profilePageJsonLd(): JsonLd {
   };
 }
 
-export function problemDescription(chapterTitle: string, problemTitle: string): string {
-  return `『高専の数学1』${chapterTitle} ${problemTitle}の独自解説。問題文は掲載せず、考え方と途中式をまとめています。`;
+export function problemDescription(
+  chapterTitle: string,
+  problemTitle: string,
+  year: Year = 1,
+): string {
+  return `『高専の数学${year}』${chapterTitle} ${problemTitle}の独自解説。問題文は掲載せず、考え方と途中式をまとめています。`;
 }
 
-export function chapterDescription(chapterTitle: string): string {
-  return `『高専の数学1』${chapterTitle}の問題解説一覧。各問は独自の解説です。`;
+export function chapterDescription(chapterTitle: string, year: Year = 1): string {
+  return `『高専の数学${year}』${chapterTitle}の問題解説一覧。各問は独自の解説です。`;
 }
 
 export function stringifyJsonLd(data: JsonLd | JsonLd[]): string {

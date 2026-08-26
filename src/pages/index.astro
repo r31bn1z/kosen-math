@@ -1,65 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCatalog, getChapterProblems } from '../lib/catalog';
-import { problemHref } from '../lib/math1';
+import YearToc from '../components/YearToc.astro';
+import { getCatalog } from '../lib/catalog';
 import { DEFAULT_DESCRIPTION, websiteJsonLd } from '../lib/seo';
 
-const catalog = await getCatalog();
+const catalog1 = await getCatalog(1);
+const catalog2 = await getCatalog(2);
 ---
 
 <BaseLayout title="高専の数学解説" description={DEFAULT_DESCRIPTION} jsonLd={websiteJsonLd()}>
   <h1>高専の数学解説</h1>
-  <p class="lede">『高専の数学1』に準拠した独自解説をまとめています。問題文は掲載せず、章・問番号で指します。</p>
+  <p class="lede">『高専の数学1』『高専の数学2』に準拠した独自解説をまとめています。問題文は掲載せず、章・問番号で指します。</p>
 
   <ul class="year-list">
-    <li>
-      <details class="year-panel">
-        <summary>
-          <a class="year-panel__title" href="/1/">高専の数学1</a>
-        </summary>
-        <div class="year-panel__body">
-          {
-            catalog.chapters.length === 0 ? (
-              <p class="year-panel__empty">公開中の解説はまだありません。</p>
-            ) : (
-              <ul class="toc-chapters">
-                {catalog.chapters.map((chapter) => (
-                  <li>
-                    <details>
-                      <summary>
-                        <a class="toc-chapter__title" href={`/1/${chapter.id}/`}>
-                          {chapter.title}
-                        </a>
-                      </summary>
-                      <ul class="toc-problems">
-                        {getChapterProblems(catalog, chapter.id).map((problem) => (
-                          <li>
-                            <a href={problemHref(problem.chapter, problem.problem)}>
-                              {problem.title}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </li>
-                ))}
-              </ul>
-            )
-          }
-        </div>
-      </details>
-    </li>
+    <YearToc year={1} title="高専の数学1" catalog={catalog1} />
 
-    <li>
-      <details class="year-panel">
-        <summary>
-          <a class="year-panel__title" href="/2/">高専の数学2</a>
-        </summary>
-        <div class="year-panel__body">
-          <p class="year-panel__empty">準備中です。</p>
-        </div>
-      </details>
-    </li>
+    <YearToc year={2} title="高専の数学2" catalog={catalog2} />
 
     <li>
       <details class="year-panel">

@@ -33,5 +33,6 @@ describe('neighbors', () => {
 describe('problemHref', () => {
   it('builds trailing-slash path', () => {
     expect(problemHref('ch01', 'q01')).toBe('/1/ch01/q01/');
+    expect(problemHref('ch01', 'q01', 2)).toBe('/2/ch01/q01/');
   });
 });

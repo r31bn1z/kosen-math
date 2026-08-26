@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { filterPublished, sortByOrder } from './math1';
+import { filterPublished, sortByOrder, type Year } from './math1';
 
 export type ChapterMeta = { id: string; title: string; order: number };
 export type ProblemEntry = {
@@ -11,7 +11,7 @@ export type ProblemEntry = {
   title: string;
   order: number;
   draft?: boolean;
-  entry: CollectionEntry<'problems'>;
+  entry: CollectionEntry<'problems'> | CollectionEntry<'problems2'>;
 };
 
 export type Catalog = {
@@ -19,7 +19,10 @@ export type Catalog = {
   problemsByChapter: Record<string, ProblemEntry[]>;
 };
 
-const CONTENT_ROOT = path.join(process.cwd(), 'content/math1');
+const YEAR_CONFIG = {
+  1: { collection: 'problems' as const, root: 'content/math1' },
+  2: { collection: 'problems2' as const, root: 'content/math2' },
+};
 
 function parseProblemId(id: string): { chapter: string; problem: string } | null {
   const parts = id.split('/');
@@ -42,8 +45,9 @@ async function readMeta(filePath: string): Promise<{ title: string; order: numbe
   return { title: data.title, order: data.order };
 }
 
-export async function getCatalog(): Promise<Catalog> {
-  const collection = await getCollection('problems');
+export async function getCatalog(year: Year = 1): Promise<Catalog> {
+  const config = YEAR_CONFIG[year];
+  const collection = await getCollection(config.collection);
   const mapped = collection.map((entry) => {
     const parsed = parseProblemId(entry.id);
     if (!parsed) {
@@ -70,14 +74,15 @@ export async function getCatalog(): Promise<Catalog> {
     problemsByChapter[key] = sortByOrder(problemsByChapter[key]!);
   }
 
-  const chapterDirs = (await readdir(CONTENT_ROOT, { withFileTypes: true }))
+  const contentRoot = path.join(process.cwd(), config.root);
+  const chapterDirs = (await readdir(contentRoot, { withFileTypes: true }))
     .filter((d) => d.isDirectory() && d.name.startsWith('ch'))
     .map((d) => d.name);
 
   const chapters: ChapterMeta[] = [];
   for (const chapterId of chapterDirs) {
     if (!problemsByChapter[chapterId]?.length) continue;
-    const chapterMeta = await readMeta(path.join(CONTENT_ROOT, chapterId, 'meta.json'));
+    const chapterMeta = await readMeta(path.join(contentRoot, chapterId, 'meta.json'));
     chapters.push({ id: chapterId, title: chapterMeta.title, order: chapterMeta.order });
   }
 

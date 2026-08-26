@@ -1,0 +1,50 @@
+---
+import { getChapterProblems, type Catalog } from '../lib/catalog';
+import { problemHref, type Year } from '../lib/math1';
+
+type Props = {
+  year: Year;
+  title: string;
+  catalog: Catalog;
+};
+
+const { year, title, catalog } = Astro.props;
+---
+
+<li>
+  <details class="year-panel">
+    <summary>
+      <a class="year-panel__title" href={`/${year}/`}>{title}</a>
+    </summary>
+    <div class="year-panel__body">
+      {
+        catalog.chapters.length === 0 ? (
+          <p class="year-panel__empty">公開中の解説はまだありません。</p>
+        ) : (
+          <ul class="toc-chapters">
+            {catalog.chapters.map((chapter) => (
+              <li>
+                <details>
+                  <summary>
+                    <a class="toc-chapter__title" href={`/${year}/${chapter.id}/`}>
+                      {chapter.title}
+                    </a>
+                  </summary>
+                  <ul class="toc-problems">
+                    {getChapterProblems(catalog, chapter.id).map((problem) => (
+                      <li>
+                        <a href={problemHref(problem.chapter, problem.problem, year)}>
+                          {problem.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </details>
+</li>

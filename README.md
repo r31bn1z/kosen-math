@@ -1,6 +1,6 @@
 # 高専の数学解説
 
-『高専の数学1』に準拠した独自解説サイト（Astro SSG → Cloudflare Pages）。
+『高専の数学1』『高専の数学2』に準拠した独自解説サイト（Astro SSG → Cloudflare Pages）。
 
 本番: https://kosen-math.r31bn1z.com
 
@@ -15,7 +15,7 @@ pnpm test
 
 ## コンテンツ
 
-問題解説は `content/math1/**/q*.md`（Markdown + KaTeX）。
+問題解説は `content/math1/**/q*.md` と `content/math2/**/q*.md`（Markdown + KaTeX）。
 `draft: true` のファイルは本番ビルドから除外される。
 
 ## 方針
