@@ -78,4 +78,18 @@ describe('math2 problem files', () => {
     expect(readProblem('ch01', 'q11.md')).not.toContain('\\frac{1}{n(n+2)}');
     expect(readProblem('ch02', 'q14.md')).toContain('1-\\left(a-\\dfrac{2}{a}\\right)');
   });
+
+  it('does not open fenced display math with $$meta on the same line', () => {
+    for (const chapter of Object.keys(EXPECTED)) {
+      const files = readdirSync(path.join(ROOT, chapter)).filter((name) => /^q\d+\.md$/.test(name));
+      for (const file of files) {
+        for (const [index, line] of readProblem(chapter, file).split('\n').entries()) {
+          const dollars = line.match(/\$\$/g) ?? [];
+          if (line.startsWith('$$') && line !== '$$' && dollars.length === 1) {
+            throw new Error(`${chapter}/${file}:${index + 1} opens $$ with meta: ${line}`);
+          }
+        }
+      }
+    }
+  });
 });
