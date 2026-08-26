@@ -6,27 +6,19 @@ import { DEFAULT_DESCRIPTION, websiteJsonLd } from '../lib/seo';
 
 const catalog1 = await getCatalog(1);
 const catalog2 = await getCatalog(2);
+const catalog3 = await getCatalog(3);
 ---
 
 <BaseLayout title="高専の数学解説" description={DEFAULT_DESCRIPTION} jsonLd={websiteJsonLd()}>
   <h1>高専の数学解説</h1>
-  <p class="lede">『高専の数学1』『高専の数学2』に準拠した独自解説をまとめています。問題文は掲載せず、章・問番号で指します。</p>
+  <p class="lede">『高専の数学1』『高専の数学2』『高専の数学3』に準拠した独自解説をまとめています。問題文は掲載せず、章・問番号で指します。</p>
 
   <ul class="year-list">
     <YearToc year={1} title="高専の数学1" catalog={catalog1} />
 
     <YearToc year={2} title="高専の数学2" catalog={catalog2} />
 
-    <li>
-      <details class="year-panel">
-        <summary>
-          <a class="year-panel__title" href="/3/">高専の数学3</a>
-        </summary>
-        <div class="year-panel__body">
-          <p class="year-panel__empty">準備中です。</p>
-        </div>
-      </details>
-    </li>
+    <YearToc year={3} title="高専の数学3" catalog={catalog3} />
   </ul>
 
   <script>

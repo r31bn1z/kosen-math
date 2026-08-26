@@ -1,12 +1,33 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { getCatalog } from '../../lib/catalog';
+import { breadcrumbJsonLd, collectionPageJsonLd } from '../../lib/seo';
+
+const catalog = await getCatalog(3);
+const description = '『高専の数学3』の章別解説一覧。各問は独自の解説です。';
 ---
 
 <BaseLayout
   title="高専の数学3"
-  description="『高専の数学3』の解説は準備中です。"
-  noindex
+  description={description}
+  jsonLd={[
+    collectionPageJsonLd('高専の数学3', '/3/', description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学3' },
+    ]),
+  ]}
 >
+  <Breadcrumb items={[{ label: '高専の数学3' }]} />
   <h1>高専の数学3</h1>
-  <p>準備中です。</p>
+  <ul>
+    {
+      catalog.chapters.map((chapter) => (
+        <li>
+          <a href={`/3/${chapter.id}/`}>{chapter.title}</a>
+        </li>
+      ))
+    }
+  </ul>
 </BaseLayout>

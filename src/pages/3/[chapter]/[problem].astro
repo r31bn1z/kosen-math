@@ -1,0 +1,74 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import PrevNext from '../../../components/PrevNext.astro';
+import { getCatalog, getChapterProblems } from '../../../lib/catalog';
+import { neighbors, problemHref } from '../../../lib/math1';
+import { articleJsonLd, breadcrumbJsonLd, problemDescription } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const catalog = await getCatalog(3);
+  const paths = [];
+  for (const chapter of catalog.chapters) {
+    const problems = getChapterProblems(catalog, chapter.id);
+    for (const problem of problems) {
+      paths.push({
+        params: {
+          chapter: chapter.id,
+          problem: problem.problem,
+        },
+        props: { chapter, problem, problems },
+      });
+    }
+  }
+  return paths;
+}
+
+const { chapter, problem, problems } = Astro.props;
+const { Content } = await render(problem.entry);
+const { prev, next } = neighbors(problems, problem.problem);
+const heading = `${chapter.title} ${problem.title}`;
+const description = problemDescription(chapter.title, problem.title, 3);
+const problemPath = problemHref(chapter.id, problem.problem, 3);
+---
+
+<BaseLayout
+  title={heading}
+  description={description}
+  ogType="article"
+  jsonLd={[
+    articleJsonLd(heading, problemPath, description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学3', path: '/3/' },
+      { name: chapter.title, path: `/3/${chapter.id}/` },
+      { name: problem.title },
+    ]),
+  ]}
+>
+  <Breadcrumb
+    items={[
+      { href: '/3/', label: '高専の数学3' },
+      { href: `/3/${chapter.id}/`, label: chapter.title },
+      {
+        label: problem.title,
+        options: problems.map((item) => ({
+          href: problemHref(item.chapter, item.problem, 3),
+          label: item.title,
+        })),
+      },
+    ]}
+  />
+  <h1>{heading}</h1>
+  <article class="prose">
+    <Content />
+  </article>
+  <p class="byline">解説: <a href="/developer/">r31bn1z</a></p>
+  <PrevNext
+    prevHref={prev ? problemHref(prev.chapter, prev.problem, 3) : null}
+    prevLabel={prev?.title ?? null}
+    nextHref={next ? problemHref(next.chapter, next.problem, 3) : null}
+    nextLabel={next?.title ?? null}
+  />
+</BaseLayout>

@@ -11,7 +11,7 @@ export type ProblemEntry = {
   title: string;
   order: number;
   draft?: boolean;
-  entry: CollectionEntry<'problems'> | CollectionEntry<'problems2'>;
+  entry: CollectionEntry<'problems'> | CollectionEntry<'problems2'> | CollectionEntry<'problems3'>;
 };
 
 export type Catalog = {
@@ -22,6 +22,7 @@ export type Catalog = {
 const YEAR_CONFIG = {
   1: { collection: 'problems' as const, root: 'content/math1' },
   2: { collection: 'problems2' as const, root: 'content/math2' },
+  3: { collection: 'problems3' as const, root: 'content/math3' },
 };
 
 function parseProblemId(id: string): { chapter: string; problem: string } | null {

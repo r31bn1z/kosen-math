@@ -51,6 +51,8 @@ describe('descriptions', () => {
     expect(chapterDescription('第16章')).toContain('『高専の数学1』第16章');
     expect(problemDescription('第1章', '1.1', 2)).toContain('『高専の数学2』第1章 1.1');
     expect(chapterDescription('第18章', 2)).toContain('『高専の数学2』第18章');
+    expect(problemDescription('第1章', '1.1', 3)).toContain('『高専の数学3』第1章 1.1');
+    expect(chapterDescription('第11章', 3)).toContain('『高専の数学3』第11章');
   });
 });
 

@@ -23,4 +23,12 @@ const problems2 = defineCollection({
   schema: problemSchema,
 });
 
-export const collections = { problems, problems2 };
+const problems3 = defineCollection({
+  loader: glob({
+    pattern: '**/q*.md',
+    base: './content/math3',
+  }),
+  schema: problemSchema,
+});
+
+export const collections = { problems, problems2, problems3 };

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { getCatalog, getChapterProblems } from '../../../lib/catalog';
+import { problemHref } from '../../../lib/math1';
+import { breadcrumbJsonLd, chapterDescription, collectionPageJsonLd } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const catalog = await getCatalog(3);
+  return catalog.chapters.map((chapter) => ({
+    params: { chapter: chapter.id },
+    props: {
+      chapter,
+      problems: getChapterProblems(catalog, chapter.id),
+    },
+  }));
+}
+
+const { chapter, problems } = Astro.props;
+const description = chapterDescription(chapter.title, 3);
+const chapterPath = `/3/${chapter.id}/`;
+---
+
+<BaseLayout
+  title={chapter.title}
+  description={description}
+  jsonLd={[
+    collectionPageJsonLd(chapter.title, chapterPath, description),
+    breadcrumbJsonLd([
+      { name: '高専の数学解説', path: '/' },
+      { name: '高専の数学3', path: '/3/' },
+      { name: chapter.title },
+    ]),
+  ]}
+>
+  <Breadcrumb
+    items={[
+      { href: '/3/', label: '高専の数学3' },
+      { label: chapter.title },
+    ]}
+  />
+  <h1>{chapter.title}</h1>
+  <ul>
+    {
+      problems.map((problem) => (
+        <li>
+          <a href={problemHref(problem.chapter, problem.problem, 3)}>{problem.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

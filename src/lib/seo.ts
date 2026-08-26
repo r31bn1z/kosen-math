@@ -3,7 +3,7 @@ import type { Year } from './math1';
 export const SITE_NAME = '高専の数学解説';
 export const SITE_ORIGIN = 'https://kosen-math.r31bn1z.com';
 export const DEFAULT_DESCRIPTION =
-  '『高専の数学1』『高専の数学2』に準拠した独自解説サイト。問題文は掲載せず、章・問番号で指します。';
+  '『高専の数学1』『高専の数学2』『高専の数学3』に準拠した独自解説サイト。問題文は掲載せず、章・問番号で指します。';
 export const OG_IMAGE_PATH = '/og.png';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
