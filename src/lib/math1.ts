@@ -29,6 +29,8 @@ export function neighbors<T extends { problem: string }>(
   };
 }
 
-export function problemHref(chapter: string, problem: string): string {
-  return `/1/${chapter}/${problem}/`;
+export type Year = 1 | 2;
+
+export function problemHref(chapter: string, problem: string, year: Year = 1): string {
+  return `/${year}/${chapter}/${problem}/`;
 }

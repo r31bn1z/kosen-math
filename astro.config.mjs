@@ -16,7 +16,7 @@ export default defineConfig({
         if (pathname.includes('404')) {
           return false;
         }
-        if (pathname === '/2/' || pathname === '/3/') {
+        if (pathname === '/3/') {
           return false;
         }
         return true;
